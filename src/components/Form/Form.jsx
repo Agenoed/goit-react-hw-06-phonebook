@@ -1,7 +1,8 @@
 import { Form, Field } from 'formik';
 import { Formik, ErrorMessage } from 'formik';
 import css from './Form.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
 import { addContact } from 'redux/contactsSlice';
 
 const FormError = ({ name }) => {
@@ -15,8 +16,17 @@ const initialValues = {
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const addContacts = (value, { resetForm }) => {
+    if (
+      contacts.some(
+        ({ name }) => name.toLowerCase() === value.name.toLowerCase()
+      )
+    ) {
+      alert(`${value.name} is already in contacts`);
+      return;
+    }
     dispatch(addContact(value));
     resetForm();
   };
