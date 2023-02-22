@@ -1,7 +1,8 @@
-import PropTypes from 'prop-types';
 import { Form, Field } from 'formik';
 import { Formik, ErrorMessage } from 'formik';
 import css from './Form.module.css';
+import { useDispatch } from 'react-redux';
+import { addContact } from 'redux/contactsSlice';
 
 const FormError = ({ name }) => {
   return <ErrorMessage name={name} render={message => <p>{message}</p>} />;
@@ -12,14 +13,16 @@ const initialValues = {
   number: '',
 };
 
-export const ContactForm = ({ onSubmit }) => {
-  const addContact = (values, { resetForm }) => {
-    onSubmit(values);
+export const ContactForm = () => {
+  const dispatch = useDispatch();
+
+  const addContacts = (value, { resetForm }) => {
+    dispatch(addContact(value));
     resetForm();
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={addContact}>
+    <Formik initialValues={initialValues} onSubmit={addContacts}>
       <Form className={css.form}>
         <label className={css.formLabel} htmlFor="name">
           Name
@@ -53,8 +56,4 @@ export const ContactForm = ({ onSubmit }) => {
       </Form>
     </Formik>
   );
-};
-
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
